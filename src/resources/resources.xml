@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<resource type="image" id="BALL">resources\balls\ball.png</resource>
+	<resource type="image" id="BALL_1">resources\balls\bigball.png</resource>
+	<resource type="image" id="BALL_2">resources\balls\blueball.png</resource>
+	<resource type="image" id="BALL_3">resources\balls\metalball.png</resource>
+	<resource type="image" id="BALL_4">resources\balls\orangeball.png</resource>
+	<resource type="image" id="BALL_5">resources\balls\darkred.png</resource>
+	<resource type="image" id="BALL_6">resources\balls\greenball.png</resource>
+	
+	<resource type="image" id="BOX_1">resources\boxes\darkbluenappula.png</resource>
+	<resource type="image" id="BOX_2">resources\boxes\greennappula.png</resource>
+	<resource type="image" id="BOX_3">resources\boxes\lightbluenappula.png</resource>
+</resources>
