@@ -9,17 +9,18 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Polygon;
+import org.newdawn.slick.geom.Transform;
 
 import eu.teemuki.sandbox.color.SandboxConstant;
 
 public class BoxRenderer extends AbstractRendered {
 
-	private Body body;
-	
 	private Image image;
 	
 	public BoxRenderer( Body body, Image image ) {
-		this.body = body;
+		
+		super( body );
+		
 		this.image = image;
 		
 		Polygon slickPolygonShape = new Polygon();
@@ -37,17 +38,11 @@ public class BoxRenderer extends AbstractRendered {
 		width = shape.m_radius * 2 * width * SandboxConstant.SCALE;
 		this.image = image.getScaledCopy((int)(Math.ceil(slickPolygonShape.getWidth())), 
 										(int)(Math.ceil(slickPolygonShape.getHeight())));
+				
+		float x = (float)this.image.getWidth()/2;
+		float y = (float)this.image.getHeight()/2;
 		
-		
-		float x = (float)image.getWidth()/2;
-		float y = (float)image.getHeight()/2;
-		
-		image.setCenterOfRotation( x, y );
-	}
-	
-	@Override
-	public Body getBody() { 
-		return body;
+		this.image.setCenterOfRotation( x, y );
 	}
 
 	@Override
@@ -58,7 +53,7 @@ public class BoxRenderer extends AbstractRendered {
 	@Override
 	public void update(GameContainer cont, int delta) throws SlickException {
 		rendeableShape.setCenterX( body.getPosition().x );
-		rendeableShape.setCenterY( body.getPosition().y );
+		rendeableShape.setCenterY( body.getPosition().y );	
 		image.setRotation( (float)Math.toDegrees(body.getAngle()));
 	}
 
@@ -66,8 +61,7 @@ public class BoxRenderer extends AbstractRendered {
 	public void render(GameContainer cont, Graphics g) throws SlickException {
 		Vec2 pos = body.getPosition();
 		g.drawImage( image, pos.x - rendeableShape.getWidth()/2 , 
-				   			  	pos.y - rendeableShape.getWidth()/2 );
-		g.draw(rendeableShape);
+				   			  	pos.y - rendeableShape.getWidth()/2 );		
 	}
 
 }

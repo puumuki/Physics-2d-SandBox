@@ -22,6 +22,7 @@ import eu.teemuki.sandbox.factories.EntityFactory;
 import eu.teemuki.sandbox.factories.PhysicsFactory;
 import eu.teemuki.sandbox.factories.RenderedFactory;
 import eu.teemuki.sandbox.renderer.IRenderer;
+import eu.teemuki.sandbox.renderer.StaticBoxRenderer;
 
 public class Simulation implements IGameObject {
 
@@ -46,11 +47,23 @@ public class Simulation implements IGameObject {
 		entityFactory = new EntityFactory();
 	}
 	
-	private void createWorld() {		
-		Body body = physicsFactory.createDynamicBall(20, 0, 1.5f);
-		IRenderer renderer = renderedFactory.createDynamicBallRendered(body, ImageDispencer.randomBallImage() );
-		BasicEntity entity = entityFactory.createDynamicBall(body, renderer);		
-		entities.add(entity);
+	private void createWorld() {				
+		Body body = physicsFactory.createStaticBox(-20, -20, 10, 0.1f, (float) Math.PI /4 );
+		StaticBoxRenderer renderer = renderedFactory.createStaticBoxRendered(body);
+		renderer.setDebugShapeColor(Color.red);
+		entities.add( entityFactory.createBasicEntity(body, renderer));
+		
+		body = physicsFactory.createStaticBox(-10f, -5f, 10f, 0.1f, (float) -(Math.PI /4) );		
+		renderer = renderedFactory.createStaticBoxRendered(body);
+		entities.add( entityFactory.createBasicEntity(body, renderer));
+		
+		body = physicsFactory.createStaticBox(-20, 10, 10, 0.1f, (float) Math.PI /4 );
+		renderer = renderedFactory.createStaticBoxRendered(body);
+		entities.add( entityFactory.createBasicEntity(body, renderer));
+		
+		body = physicsFactory.createStaticBox(-10f, 30f, 10f, 0.1f, (float) -(Math.PI /4) );		
+		renderer = renderedFactory.createStaticBoxRendered(body);
+		entities.add( entityFactory.createBasicEntity(body, renderer));
 	}
 			
 	public void render(GameContainer cont, Graphics g) throws SlickException {				
@@ -81,15 +94,34 @@ public class Simulation implements IGameObject {
 		
 		Input input = cont.getInput();
 		
+		handleMouseInput(cont, input);
+		
+		cleanObjectOutSideOfScreen( cont.getWidth(), cont.getHeight() );
+	}
+
+	public void handleMouseInput(GameContainer cont, Input input) {
+					
 		if(input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
 			
 			float x  = (input.getMouseX() - cont.getWidth() / 2) / SandboxConstant.ONE_METER_EQUALS_PX;
 			float y = (input.getMouseY() - cont.getHeight() / 2) / SandboxConstant.ONE_METER_EQUALS_PX;
 			
 			Body body = physicsFactory.createDynamicBall(x , y, 1.5f);
+			body.getFixtureList().m_friction = 0.6f;
 			IRenderer renderer = renderedFactory.createDynamicBallRendered(body, ImageDispencer.randomBallImage() );
-			entities.add(entityFactory.createDynamicBall(body, renderer));
+			entities.add(entityFactory.createBasicEntity(body, renderer));
 		}
+		
+		if( input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
+			float x  = (input.getMouseX() - cont.getWidth() / 2) / SandboxConstant.ONE_METER_EQUALS_PX;
+			float y = (input.getMouseY() - cont.getHeight() / 2) / SandboxConstant.ONE_METER_EQUALS_PX;
+			
+			Body body = physicsFactory.createDynamicBox(x , y, 1.5f, 1.5f);
+			IRenderer renderer = renderedFactory.createDynamicBoxRendered(body, ImageDispencer.randomBoxImage() );
+			entities.add(entityFactory.createBasicEntity(body, renderer));
+		}
+		
+
 	}
 	
 	private void cleanObjectOutSideOfScreen( int screenWidth, int screenHeight ) {

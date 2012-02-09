@@ -10,6 +10,9 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Fixture;
 
 import org.jbox2d.dynamics.World;
+import org.jbox2d.dynamics.joints.DistanceJointDef;
+import org.jbox2d.dynamics.joints.Joint;
+import org.jbox2d.dynamics.joints.RevoluteJointDef;
 
 public class PhysicsFactory {
 	
@@ -63,7 +66,8 @@ public class PhysicsFactory {
 	}
 	
 	public Body createStaticBox( float x, float y, 
-							   		float width, float height ) {
+							   	 float width, float height,
+							   	 float angle ) {
 		
 		BodyDef boxBodyDef = new BodyDef();
 		
@@ -74,10 +78,19 @@ public class PhysicsFactory {
 		PolygonShape ceilingShape = new PolygonShape();
 		
 		//Set as box method take parameters as "half"
-		ceilingShape.setAsBox(width, height);
-		
-		Fixture boxFixture = boxBody.createFixture(ceilingShape, 0.0f);
+		ceilingShape.setAsBox(width, height, new Vec2(0f,0f), angle);
+						
+		boxBody.createFixture(ceilingShape, 0.0f);
 				
 		return boxBody;
+	}
+	
+	public Joint createDistanceJoint( Body body, Body secondBody ) {
+		
+		DistanceJointDef distanceJoinDef = new DistanceJointDef();
+		distanceJoinDef.initialize(body, secondBody, new Vec2(0, 0), new Vec2(0,0));
+		distanceJoinDef.collideConnected = true;
+		
+		return world.createJoint(distanceJoinDef);
 	}
 }

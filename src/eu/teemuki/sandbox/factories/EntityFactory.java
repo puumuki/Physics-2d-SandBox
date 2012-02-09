@@ -8,8 +8,7 @@ import eu.teemuki.sandbox.renderer.IRenderer;
 
 public class EntityFactory {
 
-	public BasicEntity createDynamicBall( Body body, IRenderer renderer ) {
+	public BasicEntity createBasicEntity( Body body, IRenderer renderer ) {
 		return new BasicEntity(body, renderer);
 	}
-	
 }
