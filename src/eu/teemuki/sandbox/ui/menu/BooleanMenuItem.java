@@ -5,8 +5,8 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
-public class BooleanMenuItem extends BasicMenuItem implements IMenuItem {
-
+public class BooleanMenuItem extends BasicMenuItem implements IMenuItem {	
+	
 	private boolean value = false;
 	
 	public BooleanMenuItem(int posX, int posY, String text) {
@@ -49,10 +49,14 @@ public class BooleanMenuItem extends BasicMenuItem implements IMenuItem {
 		}		 
 		
 		if( isActive ) {
-			font.drawString(positionX, positionY, ">> " +  textValue);
+			font.drawString(menu.position.x + position.x, 
+							menu.position.y + position.y, 
+							">> " +  textValue);
 		}
 		else {
-			font.drawString(positionX, positionY, textValue  );
+			font.drawString(menu.position.x + position.x, 
+							menu.position.y + position.y, 
+							textValue  );
 		}
 	}
 }

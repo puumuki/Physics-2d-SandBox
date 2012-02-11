@@ -15,16 +15,16 @@ public interface IGameObject {
 	/**
 	 * Updates game object
 	 *  
-	 * @param cont
+	 * @param container
 	 * @param delta
 	 */
-	public void update(GameContainer cont, int delta) throws SlickException;
+	public void update(GameContainer container, int delta) throws SlickException;
 	
 	/**
 	 * Renders game object
 	 * 
-	 * @param cont
+	 * @param container
 	 * @param g
 	 */
-	public void render(GameContainer cont, Graphics g) throws SlickException;
+	public void render(GameContainer container, Graphics g) throws SlickException;
 }

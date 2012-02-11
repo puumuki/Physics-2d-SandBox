@@ -4,9 +4,15 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
+import org.newdawn.slick.geom.Vector2f;
 
 public class BasicMenuItem implements IMenuItem {
 
+	/**
+	 * Reference to menu that item is belonging.
+	 */
+	protected Menu menu;
+	
 	/**
 	 * Index in menu
 	 */
@@ -28,15 +34,9 @@ public class BasicMenuItem implements IMenuItem {
 	protected UnicodeFont font;
 
 	/**
-	 * This absolute position that is relative to game screen horizontally.
+	 * This absolute position that is relative to game screen;
 	 */
-	public int positionX;
-	
-	/**
-	 * This absolute position that is relative to game screen vertically. 
-	 */
-	public int positionY;
-	
+	public Vector2f position;	
 	
 	/**
 	 * Basic value
@@ -45,8 +45,7 @@ public class BasicMenuItem implements IMenuItem {
 	
 	public BasicMenuItem( int posX, int posY, String text ) {
 		this.text = text;
-		this.positionX = posX;
-		this.positionY = posY;
+		this.position = new Vector2f(posX, posY);
 	}
 	
 	@Override
@@ -57,10 +56,12 @@ public class BasicMenuItem implements IMenuItem {
 	@Override
 	public void render(GameContainer cont, Graphics g) throws SlickException {			
 		if( isActive ) {
-			font.drawString(positionX, positionY, ">> " +  text);
+			font.drawString(menu.position.x  + position.x, 
+							menu.position.y + position.y, ">> " +  text);
 		}
 		else {
-			font.drawString(positionX, positionY, text  );
+			font.drawString(menu.position.x + position.x, 
+							menu.position.y + position.y, text  );
 		}
 	}
 
@@ -117,4 +118,23 @@ public class BasicMenuItem implements IMenuItem {
 		return 0;
 	}
 
+	@Override
+	public void setMenuItemOffset(Vector2f pos) {
+		this.position = pos;
+	}
+	
+	@Override	
+	public Vector2f getMenuItemOffset() {	
+		return position;
+	}
+	
+	@Override
+	public void setMenu(Menu menu) {
+		this.menu = menu;
+	}
+	
+	@Override
+	public Menu getMenu() {
+		return menu;
+	}
 }

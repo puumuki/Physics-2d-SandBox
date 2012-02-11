@@ -16,9 +16,7 @@ public class PercentMenuItem extends BasicMenuItem {
 	
 	private float maxValue = 1;
 	
-	private float minValue = 0;
-	
-		
+	private float minValue = 0;	
 
 	public PercentMenuItem( int x, int y, String text ) {
 
@@ -60,10 +58,10 @@ public class PercentMenuItem extends BasicMenuItem {
 		String textValue = text + " " + Math.round(value * 100) + "%";
 		
 		if( isActive ) {
-			font.drawString(positionX, positionY, ">> " +  textValue);
+			font.drawString(position.x, position.y, ">> " +  textValue);
 		}
 		else {
-			font.drawString(positionX, positionY, textValue  );
+			font.drawString(position.x, position.y, textValue  );
 		}
 	}
 	

@@ -14,6 +14,8 @@ import eu.teemuki.sandbox.color.SandboxConstant;
 
 public class BallRenderer extends AbstractRendered implements IRenderer {
 	
+	private boolean drawDebugShape = false;
+	
 	protected Image image;		
 	
 	public BallRenderer( Body body, Image image ) {
@@ -54,7 +56,10 @@ public class BallRenderer extends AbstractRendered implements IRenderer {
 		Shape shape = body.m_fixtureList.m_shape;		
 		g.drawImage( image, pos.x - shape.m_radius , 
 			   		 		pos.y - shape.m_radius ); 
-		g.draw(rendeableShape);
+		
+		if( drawDebugShape ) {
+			g.draw(rendeableShape);
+		}
 	}
 
 	@Override

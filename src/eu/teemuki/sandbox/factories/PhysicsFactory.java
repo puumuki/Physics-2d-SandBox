@@ -2,6 +2,7 @@ package eu.teemuki.sandbox.factories;
 
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.common.MathUtils;
 import org.jbox2d.common.Vec2;
 
 import org.jbox2d.dynamics.Body;
@@ -12,14 +13,17 @@ import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.joints.DistanceJointDef;
 import org.jbox2d.dynamics.joints.Joint;
+import org.jbox2d.dynamics.joints.JointDef;
 import org.jbox2d.dynamics.joints.RevoluteJointDef;
 
 public class PhysicsFactory {
 	
-	private World world;
+	private World world;		
+
 	
 	public PhysicsFactory( World world ) {
 		this.world = world;
+
 	}
 	
 	public Body createDynamicBall( float x, float y, float radius ) {
@@ -74,7 +78,8 @@ public class PhysicsFactory {
 		boxBodyDef.position.set(x, y);
 		boxBodyDef.type = BodyType.STATIC;
 		
-		Body boxBody = world.createBody(boxBodyDef);		
+		Body boxBody = world.createBody(boxBodyDef);
+		
 		PolygonShape ceilingShape = new PolygonShape();
 		
 		//Set as box method take parameters as "half"
@@ -83,6 +88,29 @@ public class PhysicsFactory {
 		boxBody.createFixture(ceilingShape, 0.0f);
 				
 		return boxBody;
+	}
+	
+	public Joint createRevoluteJoin( Body body, float x, float y) {
+		return createRevoluteJoin(body, x, y, -2.0f * MathUtils.PI);
+	}
+	
+	public Joint createRevoluteJoin( Body body, float x, float y, float motorSpeed ) {
+					
+		BodyDef groundDef = new BodyDef();
+		Body ground = world.createBody(groundDef);
+		
+		RevoluteJointDef def = new RevoluteJointDef();		
+		
+		def.initialize(ground, body, new Vec2(x, y));
+		def.motorSpeed = motorSpeed;
+		def.maxMotorTorque = 10000.0f;
+		def.enableMotor = true;
+		def.lowerAngle = -0.25f * MathUtils.PI;
+		def.upperAngle = 0.5f * MathUtils.PI;
+		def.enableLimit = false;
+		def.collideConnected = true;
+		
+		return world.createJoint(def);
 	}
 	
 	public Joint createDistanceJoint( Body body, Body secondBody ) {

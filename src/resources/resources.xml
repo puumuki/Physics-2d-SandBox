@@ -11,4 +11,6 @@
 	<resource type="image" id="BOX_1">resources\boxes\darkbluenappula.png</resource>
 	<resource type="image" id="BOX_2">resources\boxes\greennappula.png</resource>
 	<resource type="image" id="BOX_3">resources\boxes\lightbluenappula.png</resource>
+	
+	<resource type="sound" id="MENU_CLICK_SOUND">resources\sounds\menu_click.wav</resource>
 </resources>

@@ -1,12 +1,10 @@
 package eu.teemuki.sandbox.world;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
+import org.jbox2d.common.MathUtils;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
-import org.jbox2d.dynamics.World;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -16,54 +14,68 @@ import org.newdawn.slick.SlickException;
 import eu.teemuki.sandbox.color.ImageDispencer;
 import eu.teemuki.sandbox.color.SandboxConstant;
 import eu.teemuki.sandbox.entities.AEntity;
-import eu.teemuki.sandbox.entities.BasicEntity;
-import eu.teemuki.sandbox.entities.IGameObject;
-import eu.teemuki.sandbox.factories.EntityFactory;
-import eu.teemuki.sandbox.factories.PhysicsFactory;
-import eu.teemuki.sandbox.factories.RenderedFactory;
 import eu.teemuki.sandbox.renderer.IRenderer;
 import eu.teemuki.sandbox.renderer.StaticBoxRenderer;
 
-public class Simulation implements IGameObject {
+public class ConveyorSimulation extends AbstractSimulation  {
 
-	private List<AEntity> entities = new ArrayList<AEntity>();
-	
-	private World world;
-	
-	private PhysicsFactory physicsFactory;
-	private RenderedFactory renderedFactory;
-	private EntityFactory entityFactory;
-	
-	public Simulation() {		
-		initWorldAndFactories();		
+	public ConveyorSimulation() {		
+		super();		
 		createWorld();
 	}
-
-	private void initWorldAndFactories() {		
-		Vec2 grafity = new Vec2(0.0f, 10.0f);
-		world = new World(grafity, true );		
-		physicsFactory = new PhysicsFactory(world);
-		renderedFactory = new RenderedFactory();
-		entityFactory = new EntityFactory();
-	}
 	
-	private void createWorld() {				
-		Body body = physicsFactory.createStaticBox(-20, -20, 10, 0.1f, (float) Math.PI /4 );
+	private void createWorld() {
+		
+		Body body = physicsFactory.createStaticBox( -42.5f, 0, 20, 0.1f, MathUtils.PI / 2);
 		StaticBoxRenderer renderer = renderedFactory.createStaticBoxRendered(body);
 		renderer.setDebugShapeColor(Color.red);
 		entities.add( entityFactory.createBasicEntity(body, renderer));
 		
-		body = physicsFactory.createStaticBox(-10f, -5f, 10f, 0.1f, (float) -(Math.PI /4) );		
+		body = physicsFactory.createStaticBox( 42.5f, 0, 20, 0.1f, MathUtils.PI / 2);
 		renderer = renderedFactory.createStaticBoxRendered(body);
+		renderer.setDebugShapeColor(Color.red);
 		entities.add( entityFactory.createBasicEntity(body, renderer));
 		
-		body = physicsFactory.createStaticBox(-20, 10, 10, 0.1f, (float) Math.PI /4 );
-		renderer = renderedFactory.createStaticBoxRendered(body);
-		entities.add( entityFactory.createBasicEntity(body, renderer));
+		float y = -10;
 		
-		body = physicsFactory.createStaticBox(-10f, 30f, 10f, 0.1f, (float) -(Math.PI /4) );		
-		renderer = renderedFactory.createStaticBoxRendered(body);
-		entities.add( entityFactory.createBasicEntity(body, renderer));
+		for( float x=-40; x<35; x += 2.5f ) {
+			body = physicsFactory.createDynamicBall(x, y, 1.0f);
+			body.getFixtureList().m_friction = 1f;
+			physicsFactory.createRevoluteJoin(body, x, y, 2.0f * MathUtils.PI);		
+			IRenderer ballRenderer = renderedFactory.createDynamicBallRendered(body, ImageDispencer.randomBallImage());
+			entities.add(entityFactory.createBasicEntity(body, ballRenderer));
+		}
+		
+		y = 0;
+		
+		for( float x=-30; x<45; x += 2.5f ) {
+			body = physicsFactory.createDynamicBall(x, y, 1);
+			body.getFixtureList().m_friction = 1f;
+			physicsFactory.createRevoluteJoin(body, x, y, -2.0f * MathUtils.PI);		
+			IRenderer ballRenderer = renderedFactory.createDynamicBallRendered(body, ImageDispencer.randomBallImage());
+			entities.add(entityFactory.createBasicEntity(body, ballRenderer));
+		}
+		
+		y = 10;
+		
+		for( float x=-40; x<35; x += 2.5f ) {
+			body = physicsFactory.createDynamicBall(x, y, 1);
+			body.getFixtureList().m_friction = 1f;
+			physicsFactory.createRevoluteJoin(body, x, y, 2.0f * MathUtils.PI);		
+			IRenderer ballRenderer = renderedFactory.createDynamicBallRendered(body, ImageDispencer.randomBallImage());
+			entities.add(entityFactory.createBasicEntity(body, ballRenderer));
+		}
+		
+
+		y = 20;
+		
+		for( float x=-40; x<45; x += 2.5f ) {
+			body = physicsFactory.createDynamicBall(x, y, 1);
+			body.getFixtureList().m_friction = 1f;
+			physicsFactory.createRevoluteJoin(body, x, y, -2.0f * MathUtils.PI);		
+			IRenderer ballRenderer = renderedFactory.createDynamicBallRendered(body, ImageDispencer.randomBallImage());
+			entities.add(entityFactory.createBasicEntity(body, ballRenderer));
+		}
 	}
 			
 	public void render(GameContainer cont, Graphics g) throws SlickException {				
@@ -120,8 +132,6 @@ public class Simulation implements IGameObject {
 			IRenderer renderer = renderedFactory.createDynamicBoxRendered(body, ImageDispencer.randomBoxImage() );
 			entities.add(entityFactory.createBasicEntity(body, renderer));
 		}
-		
-
 	}
 	
 	private void cleanObjectOutSideOfScreen( int screenWidth, int screenHeight ) {

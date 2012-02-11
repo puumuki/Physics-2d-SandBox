@@ -1,18 +1,17 @@
 package eu.teemuki.sandbox.ui.menu;
 
-
-import java.awt.Point;
-
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
-import org.newdawn.slick.util.Log;
+import org.newdawn.slick.geom.Vector2f;
 
 public class ImageMenuItem implements IMenuItem {
 
+	private Menu menu;
+	
 	private int index;
 	
 	public Image menuImage;
@@ -24,11 +23,11 @@ public class ImageMenuItem implements IMenuItem {
 	private static final Color filterColor = new Color(1f,1f,1f,0.5f);
 	
 	public boolean isActive = false;
+		
+	private Vector2f position;
 	
-	public Point point;
-	
-	public ImageMenuItem( Point point, Image menuItemImage ) {
-		this.point = point;		
+	public ImageMenuItem( Vector2f position, Image menuItemImage ) {
+		this.position = position;		
 		this.menuImage = menuItemImage;
 	}
 
@@ -46,9 +45,9 @@ public class ImageMenuItem implements IMenuItem {
 	@Override
 	public void render(GameContainer cont, Graphics g) throws SlickException {
 		if( isActive )
-			menuImage.draw(point.x - ((menuImage.getWidth() / 2 * scale) - (menuImage.getWidth() / 2)), point.y, scale);
+			menuImage.draw(position.x - ((menuImage.getWidth() / 2 * scale) - (menuImage.getWidth() / 2)), position.y, scale);
 		else {
-			menuImage.draw(point.x - ((menuImage.getWidth() / 2 * scale) - (menuImage.getWidth() / 2)), point.y, scale, filterColor);
+			menuImage.draw(position.x - ((menuImage.getWidth() / 2 * scale) - (menuImage.getWidth() / 2)), position.y, scale, filterColor);
 		}
 	}
 
@@ -102,5 +101,25 @@ public class ImageMenuItem implements IMenuItem {
 		}
 		
 		return 0;
+	}
+	
+	@Override
+	public void setMenuItemOffset(Vector2f pos) {
+		this.position = pos;
+	}
+	
+	@Override
+	public Vector2f getMenuItemOffset() {
+		return position;
+	}
+	
+	@Override
+	public void setMenu(Menu menu) {
+		this.menu = menu;
+	}
+	
+	@Override
+	public Menu getMenu() {
+		return menu;
 	}
 }

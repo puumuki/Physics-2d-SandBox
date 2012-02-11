@@ -1,6 +1,5 @@
 package eu.teemuki.sandbox.ui.menu;
 
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +15,7 @@ import org.newdawn.slick.Sound;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.GradientEffect;
 import org.newdawn.slick.font.effects.OutlineEffect;
+import org.newdawn.slick.geom.Vector2f;
 
 import eu.teemuki.sandbox.entities.IGameObject;
 import eu.teemuki.sandbox.io.ResourceManager;
@@ -26,14 +26,9 @@ import eu.teemuki.sandbox.io.ResourceManager;
 public class Menu implements IGameObject, Iterable<IMenuItem> {
 	
 	/**
-	 * Menu vertical position
+	 * Menu position relative to screen
 	 */
-	public int positionX;
-	
-	/**
-	 * Menu horizontal position
-	 */
-	public int positionY;
+	public Vector2f position;
 
 	/**
 	 * Currently selected index
@@ -42,6 +37,9 @@ public class Menu implements IGameObject, Iterable<IMenuItem> {
 		
 	private List<IMenuItem> menuitems = new ArrayList<IMenuItem>();
 	
+	/**
+	 * Font used in text based menu items
+	 */
 	private UnicodeFont font;
 	
 	/**
@@ -52,8 +50,7 @@ public class Menu implements IGameObject, Iterable<IMenuItem> {
 	/**
 	 * Indicates is menu shown.
 	 */
-	private boolean enabled = true;
-	
+	private boolean enabled = true;	
 	
 	/**
 	 * Map contains menu item name and index number
@@ -65,9 +62,14 @@ public class Menu implements IGameObject, Iterable<IMenuItem> {
 		java.awt.Color topColor = new java.awt.Color( 0xeeee00 );
         java.awt.Color bottomColor = new java.awt.Color( 0xbbff00 );
 		
-        initFont(topColor, bottomColor);
+        initDefaultFont(topColor, bottomColor);
         
 		sound = ResourceManager.getInstance().getSound("MENU_CLICK_SOUND");
+	}
+	
+	public Menu( int positionX, int positionY ) throws SlickException {
+		this();
+		this.position = new Vector2f(positionX, positionY);
 	}
 	
 	/**
@@ -77,12 +79,12 @@ public class Menu implements IGameObject, Iterable<IMenuItem> {
 	 * @throws SlickException
 	 */
 	public Menu( Color fontTopColor, Color fontBottomColor ) throws SlickException {
-		initFont(fontTopColor, fontBottomColor);
+		initDefaultFont(fontTopColor, fontBottomColor);
 		sound = ResourceManager.getInstance().getSound("MENU_CLICK_SOUND");
 		enabled = false;
 	}
 
-	private void initFont( Color topColor, Color bottomColor ) throws SlickException {
+	private void initDefaultFont( Color topColor, Color bottomColor ) throws SlickException {
 		java.awt.Font awtFont = new java.awt.Font("Ariel", java.awt.Font.PLAIN, 30);
         font = new UnicodeFont(awtFont);
         font.addAsciiGlyphs();       
@@ -107,16 +109,17 @@ public class Menu implements IGameObject, Iterable<IMenuItem> {
 		this.menuitems.add(item);
 		item.setIndex( menuitems.size() -1  );
 		item.setFont(font);
+		item.setMenu(this);
 		menuItemIndexes.put(menuItemName, item.getIndex());		
 	}	
 	
 	@Override
-	public void update(GameContainer cont, int delta) throws SlickException {
+	public void update(GameContainer container, int delta) throws SlickException {
 		for( IMenuItem item : menuitems ) {
-			item.update(cont, delta);
+			item.update(container, delta);
 		}
 		
-		Input input = cont.getInput();
+		Input input = container.getInput();
 		
 		menuitems.get(activeIndex).setActive(false);
 		
@@ -221,5 +224,17 @@ public class Menu implements IGameObject, Iterable<IMenuItem> {
 	
 	public UnicodeFont getFont() {
 		return font;
+	}
+	
+	public void setPosition(Vector2f position) {
+		this.position = position;
+	}
+	
+	public Vector2f getPosition() {
+		return position;
+	}
+	
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 }
