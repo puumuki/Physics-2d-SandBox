@@ -1,9 +1,9 @@
-package eu.teemuki.sandbox.color;
+package eu.teemuki.sandbox.utils;
 
 import org.newdawn.slick.Color;
 
 public class SandboxConstant {
-	public static final float ONE_METER_EQUALS_PX = 15;
+	public static final float ONE_METER_EQUALS_PX = 10;
 	public static final float SCALE =  1f / ONE_METER_EQUALS_PX;
 	public static final Color BACK_GROUND_COLOR = Color.white;
 	

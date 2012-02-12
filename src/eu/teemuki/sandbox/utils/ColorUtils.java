@@ -1,4 +1,4 @@
-package eu.teemuki.sandbox.color;
+package eu.teemuki.sandbox.utils;
 
 import java.math.BigInteger;
 import java.util.Random;

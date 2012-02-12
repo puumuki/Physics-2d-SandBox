@@ -12,5 +12,9 @@
 	<resource type="image" id="BOX_2">resources\boxes\greennappula.png</resource>
 	<resource type="image" id="BOX_3">resources\boxes\lightbluenappula.png</resource>
 	
+	<resource type="image" id="DUCK">resources\balls\duck.png</resource>
+	
+	<resource type="image" id="BACKGROUND">resources\background\background.png</resource>
+	
 	<resource type="sound" id="MENU_CLICK_SOUND">resources\sounds\menu_click.wav</resource>
 </resources>

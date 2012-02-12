@@ -6,14 +6,16 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
-import eu.teemuki.sandbox.color.SandboxConstant;
 import eu.teemuki.sandbox.io.ResourceManager;
 import eu.teemuki.sandbox.ui.menu.BasicMenuItem;
 import eu.teemuki.sandbox.ui.menu.Menu;
+import eu.teemuki.sandbox.utils.ResourceDispencer;
+import eu.teemuki.sandbox.utils.SandboxConstant;
 import eu.teemuki.sandbox.world.AbstractSimulation;
 import eu.teemuki.sandbox.world.ConveyorSimulation;
 import eu.teemuki.sandbox.world.EmptySimulation;
@@ -36,8 +38,9 @@ public class MainMenuGameState extends BasicGameState {
 			container.getGraphics().setBackground( SandboxConstant.BACK_GROUND_COLOR );
 			currentSimulation = new EmptySimulation();
 			
-			menu = new Menu( container.getWidth() / 2 -200, 200 );
-			menu.add("simulation1", new BasicMenuItem(0, 0, "Simulation - Conveyor Belt"));			
+			Vector2f position = new Vector2f( container.getWidth() / 2 -200, 200);
+			menu = new Menu( position, ResourceManager.fetchSound("MENU_CLICK_SOUND") );
+			menu.add("simulation1", new BasicMenuItem(0, 0, "Simulation - Conveyor Belt"));	
 		}
 
 		@Override
@@ -57,16 +60,21 @@ public class MainMenuGameState extends BasicGameState {
 			
 			Input input = container.getInput();
 			
-			if( input.isKeyPressed( Input.KEY_ENTER ) ) {
+			if( input.isKeyPressed( Input.KEY_ENTER ) && menu.isEnabled() ) {				
+				
 				if(menu.isActiveIndex("simulation1")) {
 					currentSimulation = new ConveyorSimulation();
 					menu.setEnabled(false);
 				}
-			}
+			}			
 			
 			if( input.isKeyPressed(Input.KEY_ESCAPE)) {
 				menu.setEnabled(true);
 			}
+						
+			float step = 0.1f * delta;
+			
+
 			
 			menu.update(container, delta);			
 			currentSimulation.update(container, delta);			
@@ -76,6 +84,11 @@ public class MainMenuGameState extends BasicGameState {
 		public int getID() {		
 			return stateID;
 		}		
+		
+		private void loadSimulation() {
+			currentSimulation.finilizeSimulation();
+			currentSimulation = new ConveyorSimulation();
+		}
 		
 		public void loadResourceFile() throws SlickException {
 			

@@ -14,8 +14,8 @@ import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 
-import eu.teemuki.sandbox.color.ImageDispencer;
-import eu.teemuki.sandbox.color.SandboxConstant;
+import eu.teemuki.sandbox.utils.ResourceDispencer;
+import eu.teemuki.sandbox.utils.SandboxConstant;
 
 
 public class Box  {

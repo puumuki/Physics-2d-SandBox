@@ -10,18 +10,22 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 
-import eu.teemuki.sandbox.color.ImageDispencer;
-import eu.teemuki.sandbox.color.SandboxConstant;
 import eu.teemuki.sandbox.entities.AEntity;
 import eu.teemuki.sandbox.renderer.IRenderer;
 import eu.teemuki.sandbox.renderer.StaticBoxRenderer;
+import eu.teemuki.sandbox.utils.ResourceDispencer;
+import eu.teemuki.sandbox.utils.SandboxConstant;
 
 public class ConveyorSimulation extends AbstractSimulation  {
 
+	private Vector2f cameraOffset;
+	
 	public ConveyorSimulation() {		
 		super();		
-		createWorld();
+		createWorld();		
+		cameraOffset = new Vector2f(0,0);
 	}
 	
 	private void createWorld() {
@@ -42,7 +46,7 @@ public class ConveyorSimulation extends AbstractSimulation  {
 			body = physicsFactory.createDynamicBall(x, y, 1.0f);
 			body.getFixtureList().m_friction = 1f;
 			physicsFactory.createRevoluteJoin(body, x, y, 2.0f * MathUtils.PI);		
-			IRenderer ballRenderer = renderedFactory.createDynamicBallRendered(body, ImageDispencer.randomBallImage());
+			IRenderer ballRenderer = renderedFactory.createDynamicBallRendered(body, ResourceDispencer.randomBallImage());
 			entities.add(entityFactory.createBasicEntity(body, ballRenderer));
 		}
 		
@@ -52,7 +56,7 @@ public class ConveyorSimulation extends AbstractSimulation  {
 			body = physicsFactory.createDynamicBall(x, y, 1);
 			body.getFixtureList().m_friction = 1f;
 			physicsFactory.createRevoluteJoin(body, x, y, -2.0f * MathUtils.PI);		
-			IRenderer ballRenderer = renderedFactory.createDynamicBallRendered(body, ImageDispencer.randomBallImage());
+			IRenderer ballRenderer = renderedFactory.createDynamicBallRendered(body, ResourceDispencer.randomBallImage());
 			entities.add(entityFactory.createBasicEntity(body, ballRenderer));
 		}
 		
@@ -62,7 +66,7 @@ public class ConveyorSimulation extends AbstractSimulation  {
 			body = physicsFactory.createDynamicBall(x, y, 1);
 			body.getFixtureList().m_friction = 1f;
 			physicsFactory.createRevoluteJoin(body, x, y, 2.0f * MathUtils.PI);		
-			IRenderer ballRenderer = renderedFactory.createDynamicBallRendered(body, ImageDispencer.randomBallImage());
+			IRenderer ballRenderer = renderedFactory.createDynamicBallRendered(body, ResourceDispencer.randomBallImage());
 			entities.add(entityFactory.createBasicEntity(body, ballRenderer));
 		}
 		
@@ -73,7 +77,7 @@ public class ConveyorSimulation extends AbstractSimulation  {
 			body = physicsFactory.createDynamicBall(x, y, 1);
 			body.getFixtureList().m_friction = 1f;
 			physicsFactory.createRevoluteJoin(body, x, y, -2.0f * MathUtils.PI);		
-			IRenderer ballRenderer = renderedFactory.createDynamicBallRendered(body, ImageDispencer.randomBallImage());
+			IRenderer ballRenderer = renderedFactory.createDynamicBallRendered(body, ResourceDispencer.randomBallImage());
 			entities.add(entityFactory.createBasicEntity(body, ballRenderer));
 		}
 	}
@@ -83,7 +87,7 @@ public class ConveyorSimulation extends AbstractSimulation  {
 		g.setColor(Color.orange);
 		g.drawString("Total item count: " + entitiesCurrentCount(), 10, 10 );
 		
-		g.translate(cont.getWidth()/2, cont.getHeight()/2);
+		g.translate(cont.getWidth()/2 + cameraOffset.x, cont.getHeight()/2 + cameraOffset.y);
 		g.scale( SandboxConstant.ONE_METER_EQUALS_PX, 
 				 SandboxConstant.ONE_METER_EQUALS_PX);
 				
@@ -107,30 +111,51 @@ public class ConveyorSimulation extends AbstractSimulation  {
 		Input input = cont.getInput();
 		
 		handleMouseInput(cont, input);
+		handleCameraMovements( input, delta );
 		
 		cleanObjectOutSideOfScreen( cont.getWidth(), cont.getHeight() );
 	}
 
 	public void handleMouseInput(GameContainer cont, Input input) {
-					
+		
+		float x  = (input.getMouseX() - cont.getWidth() / 2) / SandboxConstant.ONE_METER_EQUALS_PX;
+		x -= cameraOffset.x / SandboxConstant.ONE_METER_EQUALS_PX; 
+		
+		float y = (input.getMouseY() - cont.getHeight() / 2) / SandboxConstant.ONE_METER_EQUALS_PX; 
+		y -= cameraOffset.y / SandboxConstant.ONE_METER_EQUALS_PX;
+		
 		if(input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
-			
-			float x  = (input.getMouseX() - cont.getWidth() / 2) / SandboxConstant.ONE_METER_EQUALS_PX;
-			float y = (input.getMouseY() - cont.getHeight() / 2) / SandboxConstant.ONE_METER_EQUALS_PX;
-			
 			Body body = physicsFactory.createDynamicBall(x , y, 1.5f);
 			body.getFixtureList().m_friction = 0.6f;
-			IRenderer renderer = renderedFactory.createDynamicBallRendered(body, ImageDispencer.randomBallImage() );
+			IRenderer renderer = renderedFactory.createDynamicBallRendered(body, ResourceDispencer.fetchRandomDuck() );
 			entities.add(entityFactory.createBasicEntity(body, renderer));
 		}
 		
 		if( input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
-			float x  = (input.getMouseX() - cont.getWidth() / 2) / SandboxConstant.ONE_METER_EQUALS_PX;
-			float y = (input.getMouseY() - cont.getHeight() / 2) / SandboxConstant.ONE_METER_EQUALS_PX;
-			
 			Body body = physicsFactory.createDynamicBox(x , y, 1.5f, 1.5f);
-			IRenderer renderer = renderedFactory.createDynamicBoxRendered(body, ImageDispencer.randomBoxImage() );
+			IRenderer renderer = renderedFactory.createDynamicBoxRendered(body, ResourceDispencer.randomBoxImage() );
 			entities.add(entityFactory.createBasicEntity(body, renderer));
+		}
+	}
+	
+	private void handleCameraMovements(Input input, int delta) {
+		
+		float step = 0.1f * delta;
+		
+		if( input.isKeyDown(Input.KEY_LEFT)) {
+			cameraOffset.x -= step; 
+		}
+		
+		if( input.isKeyDown(Input.KEY_RIGHT)) {
+			cameraOffset.x += step; 
+		}
+		
+		if( input.isKeyDown(Input.KEY_DOWN)) {
+			cameraOffset.y += step;		
+		}
+		
+		if( input.isKeyDown(Input.KEY_UP)) {
+			cameraOffset.y -= step;
 		}
 	}
 	

@@ -7,7 +7,6 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
 import eu.teemuki.sandbox.gamestates.MainMenuGameState;
-import eu.teemuki.sandbox.gamestates.PlayGameState;
 
 public class Main extends StateBasedGame {
 
@@ -29,7 +28,7 @@ public class Main extends StateBasedGame {
 	 */
 	public static void main(String[] args) {			        
 		try {
-			AppGameContainer app = new AppGameContainer(new Main("Ring of Snake"));               
+			AppGameContainer app = new AppGameContainer(new Main("JBox2d Sandbox Playground"));               
 	        app.setShowFPS(true);        
 	        app.setDisplayMode(1280, 720, false);
 	        app.setTargetFrameRate(60);
@@ -44,5 +43,4 @@ public class Main extends StateBasedGame {
         this.addState(new MainMenuGameState(MAINMENU_GAME_STATE));
         this.enterState(MAINMENU_GAME_STATE);
 	}
-
 }

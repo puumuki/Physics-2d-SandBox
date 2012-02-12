@@ -13,9 +13,9 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Ellipse;
 
-import eu.teemuki.sandbox.color.ImageDispencer;
-import eu.teemuki.sandbox.color.SandboxConstant;
 import eu.teemuki.sandbox.io.ResourceManager;
+import eu.teemuki.sandbox.utils.ResourceDispencer;
+import eu.teemuki.sandbox.utils.SandboxConstant;
 
 
 public class Ball {

@@ -9,7 +9,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Ellipse;
 
-import eu.teemuki.sandbox.color.SandboxConstant;
+import eu.teemuki.sandbox.utils.SandboxConstant;
 
 
 public class BallRenderer extends AbstractRendered implements IRenderer {

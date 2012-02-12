@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
@@ -19,6 +20,7 @@ import org.newdawn.slick.geom.Vector2f;
 
 import eu.teemuki.sandbox.entities.IGameObject;
 import eu.teemuki.sandbox.io.ResourceManager;
+import eu.teemuki.sandbox.utils.ResourceDispencer;
 
 /**
  * Simple UI-component to creating cool looking menus. 
@@ -48,6 +50,11 @@ public class Menu implements IGameObject, Iterable<IMenuItem> {
 	private Sound sound;
 	
 	/**
+	 * Menu backgound image
+	 */
+	private Image background;
+	
+	/**
 	 * Indicates is menu shown.
 	 */
 	private boolean enabled = true;	
@@ -57,19 +64,17 @@ public class Menu implements IGameObject, Iterable<IMenuItem> {
 	 */
 	private Map<String, Integer> menuItemIndexes = new HashMap<String, Integer>();		
 	
-	public Menu() throws SlickException {	
-		
+	public Menu( Sound clickSound ) throws SlickException {			
 		java.awt.Color topColor = new java.awt.Color( 0xeeee00 );
         java.awt.Color bottomColor = new java.awt.Color( 0xbbff00 );
-		
-        initDefaultFont(topColor, bottomColor);
-        
-		sound = ResourceManager.getInstance().getSound("MENU_CLICK_SOUND");
+		this.sound = clickSound;
+		this.font = ResourceDispencer.getDefaultFont();
+        initDefaultFont(topColor, bottomColor);        
 	}
-	
-	public Menu( int positionX, int positionY ) throws SlickException {
-		this();
-		this.position = new Vector2f(positionX, positionY);
+		
+	public Menu( Vector2f position, Sound sound ) throws SlickException {
+		this( sound );
+		this.position = position.copy();
 	}
 	
 	/**
@@ -85,14 +90,15 @@ public class Menu implements IGameObject, Iterable<IMenuItem> {
 	}
 
 	private void initDefaultFont( Color topColor, Color bottomColor ) throws SlickException {
-		java.awt.Font awtFont = new java.awt.Font("Ariel", java.awt.Font.PLAIN, 30);
-        font = new UnicodeFont(awtFont);
-        font.addAsciiGlyphs();       
-        
-        OutlineEffect outlineEffect = new OutlineEffect(5, Color.WHITE);                
-        font.getEffects().add(new GradientEffect(topColor, bottomColor, 1f));
-        
-        font.loadGlyphs();
+
+	}
+	
+	public void setBackground(Image image) {
+		this.background = image;
+	}
+	
+	public Image getBackground() {
+		return background;
 	}
 	
 	public void setSound(Sound sound) {
@@ -236,5 +242,9 @@ public class Menu implements IGameObject, Iterable<IMenuItem> {
 	
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+	
+	public boolean isEnabled() {
+		return enabled;
 	}
 }
